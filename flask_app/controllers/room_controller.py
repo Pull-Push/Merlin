@@ -6,7 +6,10 @@ from string import ascii_uppercase
 from flask_app.controllers import encrypt_controller
 
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, ping_timeout=30, ping_interval=15)
+
+
+
 
 rooms = {}
 def generate_unique_code(Length):
