@@ -62,6 +62,7 @@ const decrypt = (text) => {
     });
 }
 
+
 socketio.on("message", (data) => {
     createMessage(data.name, data.message);
 });
