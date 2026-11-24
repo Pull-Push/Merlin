@@ -1,32 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="maincon container-fluid">
-    <form  method="post">
-        <h3 class="text-light text-center">Enter the Chat Room</h3>
-        <div>
-            {% if error %}
-            <ul class="list-unstyled">
-                <li class="alert alert-danger">{{error}}</li>
-            </ul>
-            {% endif %}
-            <div class="homeform">
-                <div class="mb-3">
-                <label class="text-light form-label" for="name">Name:</label>
-                <input class="form-control" type="text" placeholder="Pick a Name!" name="name" id="name" value="{{name}}">
-                </div>
-                <div class="mb-3">
-                    <label class="text-light form-label" for="code">Enter Room Code:</label>
-                    <input class="form-control" type="text" name="code" id="code" value="{{code}}" placeholder="Room Code">
-                    <div class="mx-auto lower">
-                    <button class="btn btn-light" type="submit" name="join">Join a Room</button>
-                    </div>
-                </div>
+<div class="lobby-page">
+    <div class="lobby-card">
+        <div class="lobby-glyph">⟁</div>
+        <h2 class="lobby-title">Enter a Chamber</h2>
+
+        {% if error %}
+        <div class="flash flash-error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="/dashboard">
+            <div class="field">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" value="{{ name or '' }}" placeholder="What shall we call you?" required>
             </div>
-        </div>
-        <div class="mx-auto lower">
-        <button class="btn btn-light" type="submit" name="create" class="create">Create a Room</button>
-        </div>
-    </form>
+            <div class="field">
+                <label for="code">Room Code</label>
+                <input type="text" id="code" name="code" value="{{ code or '' }}" placeholder="4-letter code" maxlength="4" style="text-transform:uppercase">
+            </div>
+
+            <div class="lobby-actions">
+                <button class="btn-merlin btn-outline" type="submit" name="join">Join Room</button>
+                <button class="btn-merlin" type="submit" name="create">Create Room</button>
+            </div>
+        </form>
+    </div>
 </div>
+
 {% endblock %}
