@@ -99,6 +99,8 @@ Entering the lobby and joining rooms doesn't require an account. Register and lo
 | `DB_HOST` | MySQL host | `localhost` |
 | `DB_USER` | MySQL user | `root` |
 | `DB_PASSWORD` | MySQL password | empty |
+| `DB_NAME` | Database name (overrides `merlin_db`) | `merlin_db` |
+| `DB_PORT` | MySQL port | `3306` |
 | `PORT` | Server port | `8008` |
 | `FLASK_DEBUG` | `1` enables debug/reloader | `0` |
 
@@ -110,11 +112,30 @@ Entering the lobby and joining rooms doesn't require an account. Register and lo
 - **Messages decode to gibberish**: every participant must use identical keys, including the shift and capitalization of the code words.
 - **Rooms disappeared**: room state is in memory, so restarting the server clears all rooms.
 
+## Deploying (Heroku)
+
+The `Procfile` runs gunicorn with one worker and a pool of threads:
+
+```
+web: gunicorn --workers 1 --threads 100 server:app
+```
+
+`simple-websocket` (in `requirements.txt`) gives Socket.IO real WebSocket support in this mode, so no eventlet or gevent is needed.
+
+- Keep **exactly one** dependency file. Heroku rejects projects that have both `requirements.txt` and a `Pipfile`/`Pipfile.lock`.
+- Heroku doesn't include MySQL. Attach a MySQL add-on (JawsDB, ClearDB, etc.) and create the `users` table there using the `CREATE TABLE` statement from `schema.sql`.
+- Set config vars instead of using `.env`:
+  ```bash
+  heroku config:set SECRET_KEY=<random> DB_HOST=<host> DB_USER=<user> \
+    DB_PASSWORD=<password> DB_NAME=<dbname> DB_PORT=3306
+  ```
+- Check startup problems with `heroku logs --tail`.
+
 ## Known limitations and roadmap
 
 - **Rooms are stored in memory.** A restart wipes every room and its history. Next step: move rooms and messages to Redis or MySQL.
 - **Lobby isn't gated by login.** Anyone can reach `/dashboard`. Next step: a `login_required` decorator, and using the logged-in username as the display name.
 - **No CSRF protection** on the forms. Next step: Flask-WTF.
-- **Development server only.** For deployment, run under gunicorn with an eventlet or gevent worker (for example `gunicorn -k eventlet -w 1 server:app`) and set a real `SECRET_KEY`.
+- **Single worker only.** Rooms live in one process's memory, so the app must run with exactly one gunicorn worker and one dyno (see Deploying). Scaling out needs the Redis move above plus a Socket.IO message queue.
 - **Keys are typed into the page and sent to the server per request.** A client-side implementation of the cipher would keep keys in the browser entirely.
 - Older messages encrypted with the original (pre-refactor) version of the cipher won't decode with this version, because the shuffle is built differently.
