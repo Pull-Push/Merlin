@@ -11,13 +11,11 @@ Built with Flask, Flask-SocketIO (WebSockets), MySQL, and vanilla JavaScript.
 To try it, open the link in two browser windows (one of them private/incognito), create a room in one, join it from the other with the 4-letter code, enter the same four keys in both, and send an encrypted message. If the app has been idle, the first page load may take a few seconds. Rooms are held in memory, so they reset whenever the app restarts.
 
 ## Screenshots
-| Chat room | Decoding a message |
-<img width="1919" height="956" alt="Screenshot 2026-11-24 at 7 31 19 AM" src="https://github.com/user-attachments/assets/c6991d41-5474-4078-bdc1-25fc44a5a4a1" />
-
-
 
 | Landing page | Lobby |
 <img width="1901" height="957" alt="Screenshot 2026-11-24 at 7 28 46 AM" src="https://github.com/user-attachments/assets/3c105085-106b-402e-b189-d31f8dcf7283" />
+| Chat room | Decoding a message |
+<img width="1919" height="956" alt="Screenshot 2026-11-24 at 7 31 19 AM" src="https://github.com/user-attachments/assets/c6991d41-5474-4078-bdc1-25fc44a5a4a1" />
 
 
 ## How the cipher works
